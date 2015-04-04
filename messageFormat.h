@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <string>
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -10,7 +11,7 @@
 #include <netdb.h>
 #include <errno.h>
 #include <unistd.h>
-
+#include <iostream>
 using namespace std;
 /*=======================Message Types========================*/
 #define REQUEST_FINAL 0
@@ -22,10 +23,21 @@ using namespace std;
 #define SETTLE 6
 #define UPDATE_HOLD_TOKEN 7
 #define UPDATE_LOSE_TOKEN 8
+
+
+/*=======================Communication Information=============*/
+#define SYSTEM_CONTROLLER_ID 66
+#define SYSTEM_CONTROLLER_IP "192.168.254.130"
 #define MAX_IP_LENGTH 16
+#define MAXPENDING 5
+
+#define PORT1 3666
+#define PORT2 3766
+#define PORT3 3866
 /*=====================Message Packet========================*/
+
 struct Packet
 {
-int TYPE; //Message Type
-int senderID; //This message`s senderID
-}
+    int TYPE; //Message Type
+    int senderID; //This message`s senderID
+};
