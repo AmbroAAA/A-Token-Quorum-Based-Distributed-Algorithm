@@ -6,6 +6,7 @@ protected:
     int quorumSize;
     int totalNodeNumber;
 public:
+    bool isServer;
     int nodeID;
     vector<int> quorumMembers;
     bool REQUESTING;
@@ -16,7 +17,4 @@ public:
     bool SERVFLAG;
     int SERVEE; //save the nodeID of which the local node is serving
     char **mapIDtoIP; //save the IP Address of correspond nodeID
-
-    void receiveMessage(Packet msg);
-    void sendMessage(Packet msg);
-}
+};
