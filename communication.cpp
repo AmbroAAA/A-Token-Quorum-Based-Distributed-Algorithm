@@ -1,6 +1,6 @@
 #include "communication.h"
 
-int communication::serverListen(int portNum){
+int communication::serverListen(int portNum,messageQueue<Packet*> *queue){
     int servSock;
     int clntSock;
     Packet msg;
@@ -25,30 +25,33 @@ int communication::serverListen(int portNum){
     if(listen(servSock,MAXPENDING) < 0 )
         errorAndTerminate("listen() failed\n");
 
-    while(1)
-    {
         clntLen = sizeof(echoClntAddr);
         if((clntSock = accept(servSock,(struct sockaddr*)&echoClntAddr,&clntLen)) < 0)
             errorAndTerminate("accept() failed\n");
         char *client_ip = inet_ntoa(echoClntAddr.sin_addr);
         readFromSocket(clntSock,&msg,sizeof(msg));
-    }
+        cout<<"Received msg from IP:"<<client_ip<<endl;
+        queue->add(&msg);
+        close(servSock); //@@
 }
 
-int communication::readFromSocket(int sockfd, void *buffer, int size)
+int communication::readFromSocket(int sockfd, Packet *msg, int size)
 {
-    ssize_t n_recv = recv(sockfd,(void*)buffer,size,0);
+    ssize_t n_recv = recv(sockfd,(Packet*)msg,size,0);
     if(n_recv < 0)
         errorAndTerminate("Error in receiving\n");
-    cout<<"===Message received:"<<(char*)buffer<<endl;
+    cout<<"===Message Type:"<<msg->TYPE<<endl;
+    cout<<"Time:"<<msg->timestamp<<endl;
+    close(sockfd);
 }
 
-int communication::writeToSocket(int sockfd, void *buffer, int size)
+int communication::writeToSocket(int sockfd, Packet *msg, int size)
 {
-    ssize_t n_send = send(sockfd,(void*) buffer,size,0);
+    ssize_t n_send = send(sockfd,(Packet*)msg,size,0);
     if(n_send < 0)
         errorAndTerminate("send() failed\n");
-    cout<<"===Message sent:"<<(char*)buffer<<endl;
+    cout<<"===Message Type: "<<msg->TYPE<<" sent"<<endl;
+    cout<<"Time: "<<msg->timestamp<<endl;
     return n_send;
 }
 
@@ -71,6 +74,7 @@ int communication::connectToServer(char dest_IP_address[15], int dest_port)
         errorAndTerminate("connect() failed");
     return sockfd;
 }
+
 
 void communication::errorAndTerminate(string erroMessage)
 {
