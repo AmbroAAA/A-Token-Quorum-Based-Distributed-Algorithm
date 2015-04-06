@@ -1,4 +1,5 @@
 #pragma once
+#include <time.h>
 #include <vector>
 #include <string>
 #include <string.h>
@@ -12,6 +13,7 @@
 #include <errno.h>
 #include <unistd.h>
 #include <iostream>
+#include "messageQueue.h"
 using namespace std;
 /*=======================Message Types========================*/
 #define REQUEST_FINAL 0
@@ -32,12 +34,13 @@ using namespace std;
 #define MAXPENDING 5
 
 #define PORT1 3666
-#define PORT2 3766
-#define PORT3 3866
+#define PORT_SEND_MSG 3766
+#define PORT_LISTEN 3866
 /*=====================Message Packet========================*/
 
 struct Packet
 {
     int TYPE; //Message Type
+    char timestamp[20];
     int senderID; //This message`s senderID
 };
