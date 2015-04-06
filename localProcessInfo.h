@@ -18,3 +18,4 @@ public:
     int SERVEE; //save the nodeID of which the local node is serving
     char **mapIDtoIP; //save the IP Address of correspond nodeID
 };
+ 
